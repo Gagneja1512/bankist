@@ -79,10 +79,10 @@ const displayMovements = function(movements){
   })
 }
 
-const calcDisplayBalance = function(movements)
+const calcDisplayBalance = function(accounts)
 {
-  const balance = movements.reduce((acc , cur) => acc+cur , 0);
-  labelBalance.textContent = `Rs.${balance}`
+  accounts.balance = accounts.movements.reduce((acc , cur) => acc+cur , 0);
+  labelBalance.textContent = `Rs.${accounts.balance}`
 }
 
 const createUserNames = function(accs)
@@ -94,6 +94,15 @@ const createUserNames = function(accs)
 }
 
 createUserNames(accounts);
+
+const updateUI = function(acc)
+{
+  displayMovements(acc.movements)
+
+  calcDisplayBalance(acc)
+
+  calcDisplaySummary(acc)
+}
 
 const calcDisplaySummary = function(accounts)
 {
@@ -128,12 +137,7 @@ btnLogin.addEventListener('click' , function(event){
     inputLoginPin.value = ''
     inputLoginPin.blur()
 
-
-    displayMovements(currentAccount.movements)
-
-    calcDisplayBalance(currentAccount.movements)
-
-    calcDisplaySummary(currentAccount)
+    updateUI(currentAccount);
   }
 
   else 
@@ -141,6 +145,25 @@ btnLogin.addEventListener('click' , function(event){
     labelWelcome.textContent = `Wrong Credentials`
     containerApp.style.opacity = 0
   }
+})
+
+btnTransfer.addEventListener('click' , function(event){
+  event.preventDefault()
+
+  const amount = Number(inputTransferAmount.value)
+  const receiverAccount = accounts.find(acc => acc.username === inputTransferTo.value)
+  
+  inputTransferAmount.value = inputTransferTo.value = ''
+
+  if(amount > 0 && currentAccount.balance >= amount && receiverAccount.username !== currentAccount.username && receiverAccount)
+  { 
+    //Doing transfer
+    currentAccount.movements.push(-amount)
+    receiverAccount.movements.push(amount)
+
+    updateUI(currentAccount)
+  }
+
 })
 
 /////////////////////////////////////////////////
