@@ -88,7 +88,7 @@ const calcDisplayBalance = function(movements)
 
 calcDisplayBalance(account1.movements);
 
-/*const createUserNames = function(accs)
+const createUserNames = function(accs)
 {
     accs.forEach(function(acc){
       acc.username = acc.owner.toLowerCase().split(' ').map(name => name[0]).join('');
@@ -96,7 +96,21 @@ calcDisplayBalance(account1.movements);
     });
 }
 
-createUserNames(accounts);*/
+createUserNames(accounts);
+
+const calcDisplaySummary = function(movements)
+{
+  const incomes = movements.filter(mov => mov>0).reduce((acc , mov) => acc+mov , 0);
+  labelSumIn.textContent = `Rs.${incomes}`
+
+  const outcomes = movements.filter(mov => mov<0).reduce((acc , mov) => acc+mov , 0);
+  labelSumOut.textContent = `Rs.${-outcomes}`
+  
+  const interest = movements.filter(mov => mov>0).map(deposit => deposit*1.2/100).filter(int => int>=1).reduce((acc , int) => acc + int , 0);
+  labelSumInterest.textContent = `Rs.${interest}`;
+
+}
+calcDisplaySummary(account1.movements);
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
