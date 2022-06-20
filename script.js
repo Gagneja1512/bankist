@@ -71,22 +71,19 @@ const displayMovements = function(movements){
     const html = `
     <div class="movements__row">
       <div class="movements__type movements__type--${type}">${i+1} ${type}</div>
-      <div class="movements__value">${mov}€</div}>
+      <div class="movements__value">Rs.${mov > 0 ? mov : -mov}</div}>
     </div>
     `;
 
     containerMovements.insertAdjacentHTML('afterbegin' , html)
   })
 }
-displayMovements(account1.movements) ;
 
 const calcDisplayBalance = function(movements)
 {
   const balance = movements.reduce((acc , cur) => acc+cur , 0);
   labelBalance.textContent = `Rs.${balance}`
 }
-
-calcDisplayBalance(account1.movements);
 
 const createUserNames = function(accs)
 {
@@ -98,19 +95,53 @@ const createUserNames = function(accs)
 
 createUserNames(accounts);
 
-const calcDisplaySummary = function(movements)
+const calcDisplaySummary = function(accounts)
 {
-  const incomes = movements.filter(mov => mov>0).reduce((acc , mov) => acc+mov , 0);
+  const incomes = accounts.movements.filter(mov => mov>0).reduce((acc , mov) => acc+mov , 0);
   labelSumIn.textContent = `Rs.${incomes}`
 
-  const outcomes = movements.filter(mov => mov<0).reduce((acc , mov) => acc+mov , 0);
+  const outcomes = accounts.movements.filter(mov => mov<0).reduce((acc , mov) => acc+mov , 0);
   labelSumOut.textContent = `Rs.${-outcomes}`
   
-  const interest = movements.filter(mov => mov>0).map(deposit => deposit*1.2/100).filter(int => int>=1).reduce((acc , int) => acc + int , 0);
+  const interest = accounts.movements.filter(mov => mov>0).map(deposit => deposit*accounts.interestRate/100).filter(int => int>=1).reduce((acc , int) => acc + int , 0);
   labelSumInterest.textContent = `Rs.${interest}`;
 
 }
-calcDisplaySummary(account1.movements);
+
+let currentAccount ;
+
+btnLogin.addEventListener('click' , function(event){
+  //Prevent form from submitting
+  event.preventDefault()
+  
+  currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value)
+  console.log(currentAccount);
+
+  if(currentAccount?.pin === Number(inputLoginPin.value))
+  {
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner}`
+
+    containerApp.style.opacity = 100 ;
+
+    //Clear input feilds
+    inputLoginUsername.value = ''
+    inputLoginPin.value = ''
+    inputLoginPin.blur()
+
+
+    displayMovements(currentAccount.movements)
+
+    calcDisplayBalance(currentAccount.movements)
+
+    calcDisplaySummary(currentAccount)
+  }
+
+  else 
+  {
+    labelWelcome.textContent = `Wrong Credentials`
+    containerApp.style.opacity = 0
+  }
+})
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
