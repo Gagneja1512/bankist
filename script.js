@@ -80,6 +80,23 @@ const displayMovements = function(movements){
 }
 displayMovements(account1.movements) ;
 
+const calcDisplayBalance = function(movements)
+{
+  const balance = movements.reduce((acc , cur) => acc+cur , 0);
+  labelBalance.textContent = `Rs.${balance}`
+}
+
+calcDisplayBalance(account1.movements);
+
+/*const createUserNames = function(accs)
+{
+    accs.forEach(function(acc){
+      acc.username = acc.owner.toLowerCase().split(' ').map(name => name[0]).join('');
+
+    });
+}
+
+createUserNames(accounts);*/
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -94,3 +111,11 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+/*const max = movements.reduce((acc , cur) => {
+  if(acc > cur)
+    return acc ;
+
+  else 
+    return cur ;  
+} , movements[0])
+console.log(max);*/
