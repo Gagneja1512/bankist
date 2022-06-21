@@ -166,6 +166,45 @@ btnTransfer.addEventListener('click' , function(event){
 
 })
 
+btnLoan.addEventListener('click' , function(event){
+  event.preventDefault()
+
+  const amount = Number(inputLoanAmount.value) ;
+
+  if(amount > 0 && currentAccount.movements.some(mov => mov >= amount*0.1))
+  {
+    //Adding movements
+    currentAccount.movements.push(amount)
+
+    updateUI(currentAccount)
+  }
+  else 
+  {
+    labelWelcome.textContent = `Sorry Loan can't be given because your deposits are less`
+  }
+  inputLoanAmount.value = ''
+})
+
+btnClose.addEventListener('click' , function(event){
+  event.preventDefault()  
+  
+  if(inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value) === currentAccount.pin)
+  {
+    const index = accounts.findIndex(acc => acc.username === currentAccount.username)
+
+    //Delete Account
+    accounts.splice(index , 1)
+    containerApp.style.opacity = 0
+    console.log('deleted')
+  }
+  else 
+  {
+    labelWelcome.textContent = `Wrong Credentials`
+  }
+
+  inputCloseUsername.value = inputClosePin.value = '';
+})
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -178,12 +217,3 @@ const currencies = new Map([
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-/////////////////////////////////////////////////
-/*const max = movements.reduce((acc , cur) => {
-  if(acc > cur)
-    return acc ;
-
-  else 
-    return cur ;  
-} , movements[0])
-console.log(max);*/
