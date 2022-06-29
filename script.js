@@ -19,7 +19,7 @@ const account1 = {
     '2020-05-08T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
     '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2022-06-28T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -73,6 +73,10 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const dateCalcPassed = (date1 , date2) => {
+  return Math.abs((date1 - date2)/(1000*60*60*24)).toFixed(0);
+}
+
 const displayMovements = function(acc , sort = false){
   containerMovements.innerHTML = '' ;
 
@@ -86,7 +90,21 @@ const displayMovements = function(acc , sort = false){
     const day = date.getDate();
     const month = date.getMonth();
     const year = date.getFullYear();
-    const displayDate = `${day}/${month+1}/${year}`;
+
+    const todayDate = new Date();
+ 
+    let displayDate;
+
+    const dayPassed = dateCalcPassed(todayDate , date);
+    if(dayPassed == 0)
+      displayDate = "Today"
+    else if(dayPassed == 1)
+      displayDate = "Yesterday"
+    else if(dayPassed <= 7)
+      displayDate = `${dayPassed} days ago`      
+    else 
+      displayDate = `${day}/${month+1}/${year}`
+
 
     const html = `
     <div class="movements__row">
