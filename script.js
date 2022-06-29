@@ -103,7 +103,7 @@ const displayMovements = function(acc , sort = false){
     else if(dayPassed <= 7)
       displayDate = `${dayPassed} days ago`      
     else 
-      displayDate = `${day}/${month+1}/${year}`
+      displayDate = new Intl.DateTimeFormat(acc.locale).format(date)
 
 
     const html = `
@@ -172,13 +172,18 @@ btnLogin.addEventListener('click' , function(event){
     containerApp.style.opacity = 100 ;
 
     const now = new Date();
-    const day = now.getDate();
-    const month = now.getMonth();
-    const year = now.getFullYear();
-    const second = now.getSeconds()
-    const hour = now.getHours()
-    const min = now.getMinutes()
-    labelDate.textContent = `${day}/${month+1}/${year} , ${hour}:${min}:${second}`;
+    const options = {
+      hour : 'numeric' , 
+      minute : 'numeric' ,
+      day : 'numeric' ,
+      month : 'numeric' ,
+      year : 'numeric' ,
+      weekday : 'long'
+
+    }
+    const date = new Intl.DateTimeFormat(currentAccount.locale , options).format(now)
+
+    labelDate.textContent = date;
 
     //Clear input feilds
     inputLoginUsername.value = ''
@@ -265,7 +270,3 @@ btnSort.addEventListener('click' , function(event){
   displayMovements(currentAccount , !sorted)
   sorted = !sorted
 })
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
